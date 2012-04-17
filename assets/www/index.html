@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testing the Android App</title>        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+        <!-- Turn off telephone number detection. -->
+        <meta name = "format-detection" content = "telephone=no">
+        <meta charset="utf-8">          
+                    
+        <link rel="stylesheet" type="text/css" href = "css/style.css" />            
+        <!-- Load the Framework Javascript files -->   
+        <script type="text/javascript" charset="utf-8" src="js/phonegap-1.3.0.js"></script>
+        <!--script type="text/javascript" src = "js/cordova-1.6.0.js"></script-->
+        <script type="text/javascript" src = "js/jquery.js"></script>
+        <script type="text/javascript">
+        $(function(){
+         init();
+        })
+         function init(){
+          //$.bind("deviceready", onDeviceReady, false);
+          document.addEventListener("deviceready", onDeviceReady, false);
+         }
+         
+         function onDeviceReady(){
+          //alert("The current version of android : " +device.version + " and uuid is : "+device.uuid);
+         alert("will display contacts here ...");
+		 addContact();
+         findContacts();
+         }
+         
+         function findContacts(){
+          alert("Inside findContacts...");
+          var options = new ContactFindOptions();
+          options.filter = "";
+          var fields = ["phoneNumbers", "name"];
+          alert("just before find ...");
+          try{
+          navigator.contacts.find(fields, onSuccess, onError, options);
+          }
+           catch(e){
+            alert(e);
+           }
+         }
+		 
+		 function addContact(){
+		 alert("Inside addContact...");
+		 try{
+		  var contact = navigator.contacts.create();
+          contact.displayName = "Plumber";
+          contact.nickname = "Plumber";       //specify both to support all devices
+          var name = new ContactName();
+          name.givenName = "Jane";
+          name.familyName = "Doe";
+          contact.name = name;
+		  }
+		  catch(e){alert(e);}
+		 }
+		 
+		 function onSaveSuccess(){
+		  alert("Saved");
+		 }
+		 
+		 function onSaveError(){
+		  alert("Error");
+		 }
+         
+         function onSuccess(contacts){
+         alert("Inside success");
+         var ul = document.getElementById("list");
+          for(var index = 0; index.contacts.length; index++){
+           var name = contacts[index].name.formatted;
+           var phoneNumber = contacts[index].phoneNumbers[0].val();
+           var li = document.createElement("li");
+           li.html("Number : " + phoneNumber);
+           ul.appendChild(li);
+          }
+          }
+          
+         function onError(error){
+          alert("Unable to find contacts...");
+         } 
+         
+        </script>
+     <body>
+     <h1>Contacts</h1>
+     <ul id = "list">
+     </ul>
+     </body>
+       </html>
